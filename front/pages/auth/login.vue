@@ -20,18 +20,31 @@
             <BaseButton class="w-full bg-color-c border-color-c">
                 <span>Login</span>
             </BaseButton>
+            <DevOnly>
+                <BaseButton type="button" @click="fakeLogin()">
+                    <span>
+                        Fake login
+                    </span>
+                </BaseButton>
+            </DevOnly>
             <div class="space-y-3 flex flex-col">
-                <nuxt-link class="hover:underline text-gray-400 hover:text-black" to="/auth/forgot-password">Forgot password?</nuxt-link>
-                <nuxt-link class="hover:underline text-gray-400 hover:text-black" to="/auth/register">Don't have an account? Sign up.</nuxt-link>
+                <nuxt-link class="hover:underline text-gray-400 hover:text-black" to="/auth/forgot-password">Forgot
+                    password?</nuxt-link>
+                <nuxt-link class="hover:underline text-gray-400 hover:text-black" to="/auth/register">Don't have an
+                    account? Sign up.</nuxt-link>
             </div>
         </div>
     </form>
 </template>
 <script lang="ts" setup>
 import { MoveLeft } from 'lucide-vue-next';
+import { useAuthStore } from '~/store/auth';
 definePageMeta({
     layout: "auth"
 })
+
+const auth = useAuthStore()
+const router = useRouter()
 
 const user = ref({
     email: "",
@@ -39,4 +52,11 @@ const user = ref({
 })
 
 const login = () => { }
+
+const fakeLogin = async () => {
+    await auth.fakeLogin()
+
+    router.push('/dashboard/member/')
+    
+}
 </script>
