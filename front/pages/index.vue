@@ -28,3 +28,8 @@
         </div>
     </LayoutsContainer>
 </template>
+<script lang="ts" setup>
+definePageMeta({
+    layout: "home"
+})
+</script>
