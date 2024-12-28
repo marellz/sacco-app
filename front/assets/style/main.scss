@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components{
+    .form-input {
+        @apply border p-4 text-lg w-full rounded-xl
+    }
+
+    .btn {
+        @apply border inline-flex items-center justify-center text-center text-xl uppercase tracking-wider py-4 px-6 transform hover:-translate-y-px transition-all focus:ring focus:ring-offset-2 outline-none rounded-xl font-bold
+    }
+}

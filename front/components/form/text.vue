@@ -5,7 +5,7 @@
             <span v-if="required">&ast;</span>
        </form-label>
        <div>
-           <textarea v-model="model" :id :resize :disabled :required :placeholder :rows ref="input"></textarea>
+           <textarea class="form-input" v-model="model" :id :resize :disabled :required :placeholder :rows ref="input"></textarea>
        </div>
        <form-error v-if="error">{{ error }}</form-error>
     </div>
@@ -27,16 +27,19 @@ withDefaults(defineProps<{
     type: 'text'
 })
 
-const id = useCustomId()
+const id = ref()
 
 const model = defineModel<string|null|undefined>({ required: true });
 
 const input = ref<HTMLInputElement | null>(null);
 
 onMounted(() => {
+    id.value = useCustomId()
+    
     if (input.value?.hasAttribute('autofocus')) {
         input.value?.focus();
     }
+
 });
 
 defineExpose({ focus: () => input.value?.focus() });

@@ -5,7 +5,7 @@
             <span v-if="required">&ast;</span>
         </form-label>
         <div>
-            <input v-model="model" :type :id :placeholder :disabled :required ref="input">
+            <input class="form-input" v-model="model" :type :id :placeholder :disabled :required ref="input">
         </div>
         <form-error v-if="error">{{ error }}</form-error>
     </div>
@@ -25,13 +25,14 @@ withDefaults(defineProps<{
     type: 'text'
 })
 
-const id = useCustomId();
+const id = ref();
 
 const model = defineModel<string | null | undefined>({ required: true });
 
 const input = ref<HTMLInputElement | null>(null);
 
 onMounted(() => {
+    id.value = useCustomId()
     if (input.value?.hasAttribute('autofocus')) {
         input.value?.focus();
     }

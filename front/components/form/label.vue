@@ -1,5 +1,5 @@
 <template>
-    <label :for>
+    <label class="text-lg mb-1 block" :for>
         <span v-if="value">{{ value }}</span>
         <span v-else><slot></slot></span>
     </label>

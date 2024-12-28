@@ -1,5 +1,6 @@
 <template>
-  <button :type :class="btnClass" :disabled="loading || disabled">
+  <button :type class="btn"
+    :class="btnClass" :disabled="loading || disabled">
     <slot />
     <custom-loader v-if="loading" />
   </button>
