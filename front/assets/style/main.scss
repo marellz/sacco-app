@@ -8,6 +8,6 @@
     }
 
     .btn {
-        @apply border inline-flex items-center justify-center text-center text-xl uppercase tracking-wider py-4 px-6 transform hover:-translate-y-px transition-all focus:ring focus:ring-offset-2 outline-none rounded-xl font-bold
+        @apply border-2 border-black inline-flex items-center justify-center text-center text-xl uppercase tracking-wider py-4 px-6 transform hover:-translate-y-px transition-all focus:ring focus:ring-offset-2 outline-none rounded-xl font-bold
     }
 }
