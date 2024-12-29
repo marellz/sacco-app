@@ -1,9 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { User } from "../types/auth";
-import UserModel from "../models/User";
+import UserModel from "../models/User.js";
 import bcrypt from "bcryptjs";
 
-type DBUser = Omit<User, "_id"> & { password: string };
 
 const seed = async () => {
   const startAt = performance.now();
@@ -12,8 +10,8 @@ const seed = async () => {
   await UserModel.deleteMany();
 
   // make sure emails are unique
-  const emails = new Set<string>();
-  const users: DBUser[] = [];
+  const emails = new Set();
+  const users = [];
 
   // common password
   const password = await bcrypt.hash("secret", 10);

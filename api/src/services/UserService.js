@@ -1,11 +1,9 @@
-import { RegisterPayload, User } from "../types/auth";
-
 export const createUser = async ({
   email,
   name,
   password,
-}: RegisterPayload): Promise<User> => {
-  const user: User = {
+}) => {
+  const user = {
     _id: "id",
     name,
     email,

@@ -1,13 +1,12 @@
-import { Express } from "express";
-import homeRoutes from "./_home";
-import authRoutes from "./_auth";
+import homeRoutes from "./_home.js";
+import authRoutes from "./_auth.js";
 
 const routes = new Map([
   ["/", homeRoutes],
   ["/auth", authRoutes],
 ]);
 
-const registerRoutes = (app: Express) => {
+const registerRoutes = (app) => {
   routes.forEach((value, key, map) => {
     app.use(key, value);
   });

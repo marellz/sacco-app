@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
-import userSeeder from "./_users";
+import userSeeder from "./_users.js";
 // import db from "../config/db";
-import DBConnection from "../config/db";
+import DBConnection from "../config/db.js";
 
 const seeders = new Map([["users", userSeeder]]);
 const db = new DBConnection()
@@ -13,7 +12,7 @@ seeders.forEach(async (value, key, map) => {
     console.log(`SEEDING: ${key}`);
     
     if (!db.connected) {
-      throw 'DB not connected';
+      console.error('DB not connected');
     }
     
     await value();

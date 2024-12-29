@@ -1,27 +1,23 @@
 import dotenv from "dotenv";
-import mongoose, { Mongoose, MongooseOptions } from "mongoose";
+import mongoose from "mongoose";
 
 dotenv.config();
 
-interface DBConfig {
-  db_uri?: string;
-  db_options: MongooseOptions;
-}
-
 class DBConnection {
-  public db: Mongoose | null = null;
-  private config: DBConfig = {
-    db_uri: process.env["MONGO_URL"],
-    db_options: {},
-  };
+   db = null;
+   config = null
 
   constructor() {
     this.db = null;
+    this.config = {
+      db_uri: process.env["MONGO_URL"],
+      db_options: {},
+    };
   }
 
-  public async connect() {
+   async connect() {
     if (!this.config.db_uri) {
-      throw "Missing DB URI";
+      console.error("Missing DB URI");
     }
 
     try {
@@ -33,7 +29,8 @@ class DBConnection {
 
       console.log("DB Connected!");
     } catch (error) {
-      throw "Error connecting to DB";
+      console.log("Error connecting to DB");
+      console.error(error);
     }
   }
 
@@ -41,13 +38,13 @@ class DBConnection {
     return this.db !== null && mongoose.connection.readyState !== 0;
   }
 
-  public async disconnect() {
+  async disconnect() {
     if (this.connected && this.db !== null) {
       console.log("DB Disconnected!");
       await this.db.disconnect();
       this.db = null;
     } else {
-      throw "DB is not connected";
+      console.error( "DB is not connected");
     }
   }
 }
