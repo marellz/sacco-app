@@ -14,4 +14,6 @@ RUN npm install
 
 COPY --chown=${UID}:${GID} . /app
 
+EXPOSE 3000
+
 CMD ["npm", "run", "dev"]

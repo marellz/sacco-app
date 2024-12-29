@@ -3,6 +3,9 @@ init:
 	echo "GID=$(GID)" >> .env
 
 up: 
+	docker-compose up
+
+upd:
 	docker-compose up -d
 
 down:
@@ -12,8 +15,10 @@ fdown:
 	docker-compose down --volumes --remove-orphans
 
 build:
-	docker-compose up --build
-	
+	docker-compose up --build --force-recreate
+
+reset: fdown build
+
 restart-api:
 	docker container restart sacco-api
 	

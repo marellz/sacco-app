@@ -8,9 +8,9 @@ services:
       - "${FRONT_PORT}:3000"
       - "24678:24678"
     volumes:
-      - ./front:/app
-      - /app/node_modules
-      - /app/.nuxt
+      - ./front:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.nuxt
     user: "${UID}:${GID}"
     environment:
       port: ${FRONT_PORT}

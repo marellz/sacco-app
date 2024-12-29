@@ -17,6 +17,7 @@ COPY --chown=${UID}:${GID} . .
 RUN npm run build
 
 EXPOSE 3000
+EXPOSE 24678
 
 CMD [ "npm", "run", "dev", "--","--host" ]
 
