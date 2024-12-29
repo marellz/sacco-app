@@ -1,8 +1,15 @@
-up:
+init:
+	echo "UID=$(UID)" > .env
+	echo "GID=$(GID)" >> .env
+
+up: 
 	docker-compose up -d
 
 down:
 	docker-compose down
+
+fdown:
+	docker-compose down --volumes --remove-orphans
 
 build:
 	docker-compose up --build

@@ -1,18 +1,22 @@
 {
-  "name": "express-mongo-boilerplate",
+  "name": "sacco-app API",
   "version": "1.0.0",
-  "description": "Boilerplate for Express.js and MongoDB API",
-  "main": "./src/index.ts",
+  "description": "API for Sacco Application. Express.js and MongoDB API",
+  "main": "./src/index.js",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
   "scripts": {
-    "dev": "tsc -w & nodemon dist/index.js",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "node dist/seeders/index.js"
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js",
+    "seed": "node ./src/seeders/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.3.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -25,12 +29,6 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.3.0",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.2",
-    "nodemon": "^3.1.9",
-    "typescript": "^5.7.2"
+    "nodemon": "^3.1.9"
   }
 }

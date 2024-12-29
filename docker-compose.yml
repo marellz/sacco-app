@@ -11,6 +11,7 @@ services:
       - ./front:/app
       - /app/node_modules
       - /app/.nuxt
+    user: "${UID}:${GID}"
     environment:
       port: ${FRONT_PORT}
     depends_on:
@@ -26,7 +27,6 @@ services:
     volumes:
       - ./api:/app
       - /app/node_modules
-      - /app/dist
     depends_on:
       - mongo
     environment:
