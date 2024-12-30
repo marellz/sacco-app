@@ -25,8 +25,8 @@ services:
     ports:
       - "${API_PORT}:${API_PORT}"
     volumes:
-      - ./api:/app
-      - /app/node_modules
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - mongo
     environment:

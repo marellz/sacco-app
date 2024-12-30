@@ -6,13 +6,13 @@ ARG GID=1000
 
 USER ${UID}:${GID}
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY --chown=${UID}:${GID} package*.json /app
+COPY --chown=${UID}:${GID} package*.json ./
 
 RUN npm install
 
-COPY --chown=${UID}:${GID} . /app
+COPY --chown=${UID}:${GID} . .
 
 EXPOSE 3000
 

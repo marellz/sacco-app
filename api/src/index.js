@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import config from "./config/app.js";
 import DBConnection from './config/db.js';
 import registerRoutes from "./router/index.js";
+
 dotenv.config();
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 const port = config.port;
 const db = new DBConnection();
 registerRoutes(app);
+
 db.connect();
 
 app.listen(port, () => {
