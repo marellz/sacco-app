@@ -1,11 +1,13 @@
 import { faker } from "@faker-js/faker";
 import UserModel from "../models/User.js";
 import bcrypt from "bcryptjs";
+import { ROLE_AUDIT, ROLE_MEMBER } from "#enums/user.js";
 
+const appSecret = process.env.APP_SECRET;
 
 const seed = async () => {
   const startAt = performance.now();
-  const count = 100;
+  const count = 40;
   // reset db collection
   await UserModel.deleteMany();
 
@@ -14,20 +16,25 @@ const seed = async () => {
   const users = [];
 
   // common password
-  const password = await bcrypt.hash("secret", 10);
+  const password = await bcrypt.hash("secret22", 10);
 
   while (emails.size < count) {
     let email = faker.internet.email();
     if (!emails.has(email)) {
       emails.add(email);
+
+      const _roles = [ROLE_MEMBER, ROLE_MEMBER, ROLE_AUDIT];
+      const roles = _roles.splice(0, faker.number.int({ min: 1, max: 2 }));
+      const activeRole = roles[0];
       users.push({
+        firstName: faker.person.firstName(),
+        otherNames: faker.person.lastName(),
         avatar: faker.image.avatar(),
         email,
         password,
-        name: [faker.person.firstName(), faker.person.lastName()].join(" "),
+        activeRole,
+        roles,
       });
-    } else {
-      console.log("unique at ", emails.size);
     }
   }
 

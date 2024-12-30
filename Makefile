@@ -19,6 +19,9 @@ build:
 
 reset: fdown build
 
+seed:
+	docker exec -ti sacco-api npm run seed
+
 restart-api:
 	docker container restart sacco-api
 	

@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 const schema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
+      type: String,
+      required: [true, "User name is required"],
+    },
+    otherNames: {
       type: String,
       required: [true, "User name is required"],
     },
@@ -17,6 +21,14 @@ const schema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    roles: {
+      type: Array,
+      required: true,
+    },
+    activeRole: {
+      type: String,
+      required: true,
+    }
   },
   {
     timestamps: true,
