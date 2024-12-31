@@ -18,11 +18,17 @@ export default defineNuxtPlugin(() => {
 
   api.interceptors.request.use(
     function (config) {
+
+      if(useAuthStore().token) {
+        config.headers['Authorization'] = useAuthStore().token;
+      }
+
       return config;
+
     },
     function (error) {
       return Promise.reject(error);
-    }
+    },
   );
 
   api.interceptors.response.use(
@@ -30,7 +36,7 @@ export default defineNuxtPlugin(() => {
       return response.data;
     },
     function (error) {
-      const status = error.response.status;
+      const status = error.response?.status;
       const route = useRoute();
       switch (status) {
         case 401:
