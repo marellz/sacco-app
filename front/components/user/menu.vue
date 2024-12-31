@@ -17,6 +17,11 @@
                     <User />
                     <span>View profile</span>
                 </BaseNavItem>
+                <BaseNavItem :to="`/dashboard/${user.activeRole}`">
+                    <LayoutDashboard />
+                    <span>Go to Dashboard</span>
+                </BaseNavItem>
+                
                 <BaseNavItem to="#" v-for="role in otherRoles" :key="role">
                     <template #nav-item>
                         <a href="#" class="nav-item" @click.prevent="switchRole(role)">
@@ -43,7 +48,7 @@
 </template>
 <script lang="ts" setup>
 import { onClickOutside } from '@vueuse/core';
-import { ChevronDown, LogOut, User, UserCog } from 'lucide-vue-next';
+import { ChevronDown, LogOut, User, UserCog, LayoutDashboard } from 'lucide-vue-next';
 import { useAuthStore } from '~/store/auth';
 import type { UserRole } from '~/types/user';
 
