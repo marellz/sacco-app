@@ -6,6 +6,7 @@
         </main>
         <HomeFooter />
     </div>
+    <ToastWrapper />
 </template>
 <script lang="ts" setup>
 </script>

@@ -65,6 +65,12 @@ export const useAuthStore = defineStore(
     const logout = async () => {
       user.value = null;
       token.value = null;
+
+      toasts.add({
+        variant: "success",
+        title: "Logout",
+        description: "Successfully logged out!",
+      });
     };
 
     const update = async (form: User) => {
@@ -74,10 +80,21 @@ export const useAuthStore = defineStore(
 
         if (response.error) {
           console.error("Error updating user", response.error);
+
+          toasts.add({
+            variant: "error",
+            title: "Error",
+            description: response.error,
+          });
         }
 
         if (response.data) {
           user.value = response.data;
+           toasts.add({
+             variant: "success",
+             title: "Update profile",
+             description: "Successfully updated your profile",
+           });
           return true;
         }
 
@@ -103,6 +120,12 @@ export const useAuthStore = defineStore(
 
       if (activeRole) {
         user.value = { ...user.value!!, activeRole };
+
+        toasts.add({
+          variant: "success",
+          title: "Switch to " + activeRole,
+          description: "Successfully switched role!",
+        });
       }
     };
 
@@ -113,6 +136,12 @@ export const useAuthStore = defineStore(
     //**WATCHER */
     watch(token, (value) => {
       $api.defaults.headers.common["Authorization"] = value;
+    });
+
+    watch(isAuthenticated, (v) => {
+      if (!v) {
+        useRouter().push("/auth/login");
+      }
     });
 
     return {
