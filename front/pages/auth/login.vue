@@ -17,16 +17,9 @@
             </div>
             <FormInput v-model="user.email" required label="Email/Phone"></FormInput>
             <FormInput v-model="user.password" required type="password" label="Password"></FormInput>
-            <BaseButton class="w-full bg-color-c border-color-c">
+            <BaseButton type="submit" class="w-full bg-color-c border-color-c">
                 <span>Login</span>
             </BaseButton>
-            <DevOnly>
-                <BaseButton type="button" @click="fakeLogin()">
-                    <span>
-                        Fake login
-                    </span>
-                </BaseButton>
-            </DevOnly>
             <div class="space-y-3 flex flex-col">
                 <nuxt-link class="hover:underline text-gray-400 hover:text-black" to="/auth/forgot-password">Forgot
                     password?</nuxt-link>
@@ -47,16 +40,15 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const user = ref({
-    email: "",
-    password: "",
+    email: "dave@test.com",
+    password: "secret22",
 })
 
-const login = () => { }
-
-const fakeLogin = async () => {
-    await auth.fakeLogin()
-
-    router.push('/dashboard/member/')
-    
+const login = async () => {
+    const success = await auth.login(user.value);
+    if (success) {
+        router.push('/dashboard/member/')
+    }
 }
+
 </script>

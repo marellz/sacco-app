@@ -1,11 +1,12 @@
 <template>
     <div class="relative" ref="menu">
         <BaseIconButton @click="active = !active">
-            <span class="bg-slate-200 p-1 rounded-full">
+            <span v-if="!user?.avatar" class="bg-slate-200 p-1 rounded-full">
                 <User />
             </span>
+            <img v-else :src="user?.avatar" />
             <p>
-                {{ user?.name ?? 'Unauthenticated!'}}
+                {{ user?.firstName }}
             </p>
             <ChevronDown />
         </BaseIconButton>
