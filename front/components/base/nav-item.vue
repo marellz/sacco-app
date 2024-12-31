@@ -1,14 +1,21 @@
 <template>
     <li>
-        <nuxt-link :to :class="[linkClass]" class="flex p-3 hover:bg-slate-100 whitespace-nowrap space-x-2 rounded-xl">
+        <component :is="tag" :to :class="[linkClass]"
+            @click="$emit('click')"
+            class="flex p-3 hover:bg-slate-100 whitespace-nowrap space-x-2 rounded-xl">
             <slot />
-        </nuxt-link>
+        </component>
     </li>
 </template>
 <script lang="ts" setup>
-defineProps<{
+withDefaults(defineProps<{
     to: string;
+    tag?: string,
     linkClass?: string;
-}>()
+}>(), {
+    tag: 'nuxt-link'
+})
+
+defineEmits(['click'])
 
 </script>
