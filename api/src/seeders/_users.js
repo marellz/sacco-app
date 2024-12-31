@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import UserModel from "../models/User.js";
 import bcrypt from "bcryptjs";
-import { ROLE_AUDIT, ROLE_MEMBER } from "#enums/user.js";
+import { ROLE_AUDIT, ROLE_MEMBER, ROLE_ADMIN } from "#enums/user.js";
 
 const appSecret = process.env.APP_SECRET;
 
@@ -23,7 +23,7 @@ const seed = async () => {
     if (!emails.has(email)) {
       emails.add(email);
 
-      const _roles = [ROLE_MEMBER, ROLE_MEMBER, ROLE_AUDIT];
+      const _roles = [ROLE_MEMBER, ROLE_ADMIN, ROLE_AUDIT];
       const roles = _roles.splice(0, faker.number.int({ min: 1, max: 2 }));
       const activeRole = roles[0];
       users.push({

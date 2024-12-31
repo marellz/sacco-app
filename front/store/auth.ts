@@ -1,14 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useToastsStore } from "./toasts";
-
-interface User {
-  firstName: string;
-  otherNames: string;
-  avatar: string;
-  id: string;
-  email: string;
-  activeRole: string;
-}
+import type { User, UserRole } from "@/types/user";
 
 interface LoginPayload {
   email: string;
@@ -18,6 +10,16 @@ interface LoginResponse {
   error?: string;
   token?: string;
   data?: User;
+}
+
+interface UpdateResponse {
+  error?: string;
+  data?: User;
+}
+
+interface SwitchRoleResponse {
+  activeRole?: UserRole;
+  error?: string;
 }
 
 export const useAuthStore = defineStore(
@@ -59,22 +61,69 @@ export const useAuthStore = defineStore(
         loading.value = false;
       }
     };
+
     const logout = async () => {
       user.value = null;
       token.value = null;
     };
 
+    const update = async (form: User) => {
+      try {
+        loading.value = true;
+        const response: UpdateResponse = await $api.put("/user/profile", form);
+
+        if (response.error) {
+          console.error("Error updating user", response.error);
+        }
+
+        if (response.data) {
+          user.value = response.data;
+          return true;
+        }
+
+        return false;
+      } catch (error) {
+        console.error("Error updating user", error);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const switchRole = async (role: UserRole) => {
+      const { activeRole, error }: SwitchRoleResponse = await $api.put(
+        "/user/switch",
+        {
+          role,
+        }
+      );
+
+      if (error) {
+        console.error("Error switching role", error);
+      }
+
+      if (activeRole) {
+        user.value = { ...user.value!!, activeRole };
+      }
+    };
+
+    //**GETTERS */
+
     const isAuthenticated = computed(() => user.value !== null);
 
+    //**WATCHER */
     watch(token, (value) => {
       $api.defaults.headers.common["Authorization"] = value;
     });
 
     return {
       user,
+      token,
       isAuthenticated,
       login,
       logout,
+
+      update,
+      switchRole,
     };
   },
   {

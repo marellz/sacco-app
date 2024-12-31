@@ -21,6 +21,10 @@ const schema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    phoneNumbers: {
+      type: Array,
+      required: true,
+    },
     roles: {
       type: Array,
       required: true,

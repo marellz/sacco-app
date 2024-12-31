@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import generateToken from "#utils/generate-token.js";
 dotenv.config();
 
-import { createUser, parseUser } from "#services/UserService.js";
+import { createUser, parseUser, updateUser, switchUserRole } from "#services/UserService.js";
 
 export const user = async (req, res) => {
   try {
@@ -94,6 +94,21 @@ export const resetPassword = () => {
   // change the password
 };
 
+export const update = async (req, res) => {
+  try {
+    const userParams = { email: req.user.email };
+    await updateUser(userParams, req.body);
+    const updatedUser = await User.findOne(userParams);
+
+    return res.json({
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
+  }
+};
+
 export const updatePassword = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
@@ -133,5 +148,17 @@ export const updatePassword = async (req, res) => {
       error: "Error updating password",
       message,
     });
+  }
+};
+
+export const switchRole = async (req, res) => {
+  try {
+    await switchUserRole({ email: req.user.email }, req.body);
+    return res.json({
+      activeRole: req.body.role,
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error });
   }
 };

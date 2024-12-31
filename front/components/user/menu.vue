@@ -1,11 +1,11 @@
 <template>
     <div class="relative" ref="menu">
-        <BaseIconButton @click="active = !active">
-            <span v-if="!user?.avatar" class="bg-slate-200 p-1 rounded-full">
+        <BaseIconButton class="border" @click="active = !active">
+            <span v-if="!user?.avatar" class="bg-slate-200 h-8 w-8 rounded-full">
                 <User />
             </span>
-            <img v-else :src="user?.avatar" />
-            <p>
+            <img v-else :src="user?.avatar" class="h-8 w-8 rounded-full" />
+            <p class="font-medium">
                 {{ user?.firstName }}
             </p>
             <ChevronDown />
@@ -17,13 +17,18 @@
                     <User />
                     <span>View profile</span>
                 </BaseNavItem>
+                <BaseNavItem tag="button" to="#" v-for="role in otherRoles" :key="role" @click="switchRole(role)">
+                    <UserCog />
+                    <span>
+                        Switch to {{ role }}
+                    </span>
+                </BaseNavItem>
                 <BaseNavItem to="#" link-class=" text-red-500 font-medium hover:bg-red-100" @click.prevent="logout">
                     <LogOut />
                     <span>
                         Logout
                     </span>
                 </BaseNavItem>
-
             </ul>
         </div>
 
@@ -31,18 +36,29 @@
 </template>
 <script lang="ts" setup>
 import { onClickOutside } from '@vueuse/core';
-import { ChevronDown, LogOut, User } from 'lucide-vue-next';
+import { ChevronDown, LogOut, User, UserCog } from 'lucide-vue-next';
 import { useAuthStore } from '~/store/auth';
+import type { UserRole } from '~/types/user';
 
 const auth = useAuthStore()
-const user = computed(() => auth.user)
+const user = computed(() => auth.user!!)
 const router = useRouter()
+const route = useRoute()
 const active = ref(false);
 const target = useTemplateRef('menu')
 const logout = () => {
     auth.logout()
 
     router.push('/')
+}
+
+const otherRoles = computed(() => user.value.roles.filter(role => role !== user.value.activeRole))
+
+const switchRole = async (role: UserRole) => {
+    await auth.switchRole(role)
+    const newRole = user.value.activeRole
+    if (route.path.includes('/dashboard'))
+        router.push(`/dashboard/${newRole}/`)
 }
 
 onClickOutside(target, () => {

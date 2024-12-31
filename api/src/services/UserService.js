@@ -9,7 +9,7 @@ export const createUser = async ({
   otherNames,
   password,
 
-  // TODO: IMPLEMENT: For any other role, the current user 
+  // TODO: IMPLEMENT: For any other role, the current user
   // has to have ROLE_ADMIN as activeRole
   activeRole = ROLE_MEMBER,
   roles = [activeRole],
@@ -29,16 +29,39 @@ export const createUser = async ({
   return parseUser(user);
 };
 
+export const updateUser = async (params, body) => {
+  const { firstName, otherNames, phoneNumbers, avatar } = body;
+
+  await User.findOneAndUpdate(params, {
+    firstName,
+    otherNames,
+    phoneNumbers,
+    avatar,
+  });
+};
+
+export const switchUserRole = async (params, body) => {
+  const { role } = body;
+  const user = await User.findOne(params);
+  if (!user.roles.includes(role)) {
+    throw "User does not have this role";
+  }
+  await User.findOneAndUpdate(params, {
+    activeRole: role,
+  });
+};
+
 export const parseUser = async (user) => {
   return {
     id: user._id,
     email: user.email,
     firstName: user.firstName,
     otherNames: user.otherNames,
-    fullName: [user.firstName, user.otherNames].join(' '),
+    fullName: [user.firstName, user.otherNames].join(" "),
     avatar: user.avatar,
     joined: user.createdAt,
     roles: user.roles,
+    phoneNumbers: user.phoneNumbers,
     activeRole: user.activeRole,
   };
 };
