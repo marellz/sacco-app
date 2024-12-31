@@ -17,21 +17,28 @@
                     <User />
                     <span>View profile</span>
                 </BaseNavItem>
-                <BaseNavItem tag="button" to="#" v-for="role in otherRoles" :key="role" @click="switchRole(role)">
-                    <UserCog />
-                    <span>
-                        Switch to {{ role }}
-                    </span>
+                <BaseNavItem to="#" v-for="role in otherRoles" :key="role">
+                    <template #nav-item>
+                        <a href="#" class="nav-item" @click.prevent="switchRole(role)">
+                            <UserCog />
+                            <span>
+                                Switch to {{ role }}
+                            </span>
+                        </a>
+                    </template>
                 </BaseNavItem>
-                <BaseNavItem to="#" link-class=" text-red-500 font-medium hover:bg-red-100" @click.prevent="logout">
-                    <LogOut />
-                    <span>
-                        Logout
-                    </span>
+                <BaseNavItem to="#">
+                    <template #nav-item>
+                        <a href="#" class="nav-item text-red-500 font-medium hover:bg-red-100" @click.prevent="logout">
+                            <LogOut />
+                            <span>
+                                Logout
+                            </span>
+                        </a>
+                    </template>
                 </BaseNavItem>
             </ul>
         </div>
-
     </div>
 </template>
 <script lang="ts" setup>
@@ -48,11 +55,10 @@ const active = ref(false);
 const target = useTemplateRef('menu')
 const logout = () => {
     auth.logout()
-
     router.push('/')
 }
 
-const otherRoles = computed(() => user.value.roles.filter(role => role !== user.value.activeRole))
+const otherRoles = computed(() => user.value?.roles.filter(role => role !== user.value.activeRole))
 
 const switchRole = async (role: UserRole) => {
     await auth.switchRole(role)
@@ -60,6 +66,10 @@ const switchRole = async (role: UserRole) => {
     if (route.path.includes('/dashboard'))
         router.push(`/dashboard/${newRole}/`)
 }
+
+watch(() => useRoute().path, () => {
+    active.value = false
+})
 
 onClickOutside(target, () => {
     active.value = false
