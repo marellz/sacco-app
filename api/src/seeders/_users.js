@@ -24,8 +24,12 @@ const seed = async () => {
       emails.add(email);
 
       const _roles = [ROLE_MEMBER, ROLE_ADMIN, ROLE_AUDIT];
-      const roles = _roles.splice(0, faker.number.int({ min: 1, max: 2 }));
+      const limit = (min = 1, max = 10) => faker.number.int({ min, max });
+      const roles = _roles.splice(0, limit(1, 2));
       const activeRole = roles[0];
+      const phoneNumbers = Array(limit(1, 2))
+        .fill("")
+        .map((i) => faker.phone.number());
       users.push({
         firstName: faker.person.firstName(),
         otherNames: faker.person.lastName(),
@@ -34,9 +38,23 @@ const seed = async () => {
         password,
         activeRole,
         roles,
+        phoneNumbers,
       });
     }
   }
+
+  // add default test.user
+
+  users.unshift({
+    firstName: "Dave",
+    otherNames: "Tester",
+    avatar: faker.image.avatar(),
+    email: "dave@test.com",
+    password,
+    activeRole: "member",
+    roles: ["member", "admin"],
+    phoneNumbers: ['0712342134', '07351231452'],
+  });
 
   try {
     const batchSize = 20;
