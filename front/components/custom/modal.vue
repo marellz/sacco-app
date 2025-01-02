@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <div ref="modal">
-      <div>
+  <div class="fixed inset-0 z-[5] bg-black/10 backdrop-blur-sm transition"
+    :class="{ 'invisible opacity-0': !show, 'visible opacity-full': show }">
+    <div class="bg-white p-10 rounded-xl mt-20 mx-auto space-y-10" :class="[width]" ref="modal">
+      <div class="border-b flex justify-between pb-4">
         <slot name="header">
           <div>
-            <h1>{{ title }}</h1>
+            <BlocksTitle>{{ title }}</BlocksTitle>
           </div>
         </slot>
-        <button type="button" click="close">
-          <x :size="20"></x>
+        <button type="button" @click="close">
+          <x :size="32"></x>
         </button>
       </div>
       <div>
@@ -19,6 +20,8 @@
 </template>
 <script lang="ts" setup>
 // import { onClickOutside } from "@vueuse/core";
+import { onClickOutside } from '@vueuse/core';
+import { X } from 'lucide-vue-next';
 import { ref, watch } from "vue"
 withDefaults(
   defineProps<{
@@ -31,11 +34,14 @@ withDefaults(
 );
 
 const show = defineModel("show", { default: false });
+const modal = ref();
+
 const close = () => {
   show.value = false;
 };
-const modal = ref();
-// onClickOutside(modal, close);
+
+
+onClickOutside(modal, close);
 
 watch(show, (v) => {
   let w = document.body.classList;

@@ -1,7 +1,6 @@
 <template>
-    <label>
+    <label class="flex space-x-2 gap-2">
         <input type="checkbox" :value :required :disabled :name v-model="model">
-
         <div>
             <slot>
                 <span v-if="label">
