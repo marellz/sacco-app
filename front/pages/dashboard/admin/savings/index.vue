@@ -1,12 +1,12 @@
 <template>
     <LayoutsContainer>
-        <DashHeader title="Loans"></DashHeader>
+        <DashHeader title="Savings"></DashHeader>
         <DashContent>
-            {{ loans }}
+            {{ savings }}
         </DashContent>
     </LayoutsContainer>
 </template>
 <script lang="ts" setup>
 
-const loans = ref([])
+const savings = ref([])
 </script>

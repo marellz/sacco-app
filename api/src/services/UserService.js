@@ -1,4 +1,3 @@
-import { ROLE_MEMBER } from "#enums/user.js";
 import User from "#models/User.js";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";

@@ -1,12 +1,22 @@
 import type { NewUser } from "~/pages/dashboard/admin/users/index.vue";
 import type { User } from "~/types/user";
 
+interface CreateUserResponse {
+  error?: string;
+  data?: User;
+}
+
+interface SearchResponse {
+  error?: string;
+  data?: Array<User>;
+}
+
 export function useUsers() {
   const { $api } = useNuxtApp();
   const users = ref<User[]>([]);
   const error = ref<any>(null);
   const loading = ref(false);
-  const queried = ref<string|null>(null)
+  const queried = ref<string | null>(null);
 
   const fetchUsers = async () => {
     loading.value = true;
@@ -20,16 +30,6 @@ export function useUsers() {
       loading.value = false;
     }
   };
-
-  interface CreateUserResponse {
-    error?: string;
-    data?: User;
-  }
-
-  interface SearchResponse {
-    error?: string;
-    data?: Array<User>
-  }
 
   const createUser = async (user: NewUser) => {
     error.value = null;
@@ -61,7 +61,7 @@ export function useUsers() {
       }
 
       // todo: toast
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       error.value = "Error occurred when creating user\n: " + err;
     } finally {
@@ -73,24 +73,23 @@ export function useUsers() {
     error.value = null;
     loading.value = true;
     try {
-      const response : SearchResponse = await $api.get("/admin/users", {
-        params:{
+      const response: SearchResponse = await $api.get("/admin/users", {
+        params: {
           query,
-        }
+        },
       });
-      if(response.error){
+      if (response.error) {
         error.value = error;
-        console.error(error)
+        console.error(error);
       }
-      
-      if(response.data){
+
+      if (response.data) {
         users.value = response.data;
         queried.value = query;
-        return true
-        
+        return true;
       }
-      return false
-    } catch (err) {
+      return false;
+    } catch (err: any) {
       console.error(err);
       error.value = err;
     } finally {
