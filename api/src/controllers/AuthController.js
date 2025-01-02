@@ -5,6 +5,7 @@ import generateToken from "#utils/generate-token.js";
 dotenv.config();
 
 import { createUser, parseUser, updateUser, switchUserRole } from "#services/UserService.js";
+import { ROLE_MEMBER } from "#enums/user.js";
 
 export const user = async (req, res) => {
   try {
@@ -50,7 +51,7 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { firstName, otherNames, email, password } = req.body;
+    const { firstName, otherNames, email, password, phoneNumbers = [] } = req.body;
 
     const exists = await User.findOne({ email });
 
@@ -58,7 +59,9 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: "Email already registered." });
     }
 
-    const user = await createUser({ firstName, otherNames, email, password });
+    const roles = [ROLE_MEMBER]
+
+    const user = await createUser({ firstName, otherNames, email, password, roles, phoneNumbers });
 
     const id = user._id;
 
