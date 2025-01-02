@@ -67,6 +67,8 @@ export const register = async (req, res) => {
 
     const token = generateToken(id, email);
 
+    sendWelcomeEmail(user.email, user.firstName);
+
     return res.json({
       data: user,
       token,

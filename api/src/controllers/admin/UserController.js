@@ -1,6 +1,7 @@
 import User from "#models/User.js";
+import { sendWelcomeEmail } from "#services/mail/welcomeEmail.js";
 import { createUser as creationService } from "#services/UserService.js";
-import generate from "#utils/generate-token.js";
+import generate from "#utils/generate-string.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -52,8 +53,8 @@ export const createUser = async (req, res) => {
       phoneNumbers,
     });
 
-    if (user) {
-      //todo: send mail with password on
+    if(user) {
+      sendWelcomeEmail(user.email, user.firstName, password);
     }
 
     return res.json({
