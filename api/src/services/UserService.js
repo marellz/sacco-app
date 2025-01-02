@@ -8,14 +8,14 @@ export const createUser = async ({
   firstName,
   otherNames,
   password,
-
-  // TODO: IMPLEMENT: For any other role, the current user
-  // has to have ROLE_ADMIN as activeRole
-  activeRole = ROLE_MEMBER,
-  roles = [activeRole],
+  roles,
+  phoneNumbers,
 }) => {
+
   const hashedPassword = await bcrypt.hash(password, 10);
   let avatar = faker.image.avatar();
+  const activeRole = roles[0];
+  
   const user = await User.create({
     firstName,
     otherNames,
@@ -24,6 +24,7 @@ export const createUser = async ({
     avatar,
     roles,
     activeRole,
+    phoneNumbers
   });
 
   return parseUser(user);
