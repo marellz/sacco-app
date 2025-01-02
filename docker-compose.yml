@@ -58,6 +58,11 @@ services:
       - "8081:8081"
     depends_on:
       - mongo
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
 
 volumes:
   mongo: {}
