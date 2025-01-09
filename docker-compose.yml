@@ -8,10 +8,9 @@ services:
       - "${FRONT_PORT}:3000"
       - "24678:24678"
     volumes:
-      - ./front:/usr/src/app
-      - /usr/src/app/node_modules
-      - /usr/src/app/.nuxt
-    user: "${UID}:${GID}"
+      - ./front:/app
+      - /app/node_modules
+      - /app/.nuxt
     environment:
       port: ${FRONT_PORT}
     depends_on:
@@ -25,8 +24,8 @@ services:
     ports:
       - "${API_PORT}:${API_PORT}"
     volumes:
-      - ./api:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./api:/app
+      - /app/node_modules
     depends_on:
       - mongo
     environment:
@@ -58,6 +57,7 @@ services:
       - "8081:8081"
     depends_on:
       - mongo
+    restart: always
 
 volumes:
   mongo: {}

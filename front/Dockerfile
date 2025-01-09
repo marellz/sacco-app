@@ -1,26 +1,24 @@
 # Base Image
-FROM node:18-alpine
+FROM node:18.20.5
 
-ARG UID=1000
-ARG GID=1000
+WORKDIR /app
 
-USER ${UID}:${GID}
-
-WORKDIR /usr/src/app
-
-COPY --chown=${UID}:${GID} package*.json ./
+COPY package.json .
 
 RUN npm install
 
-COPY --chown=${UID}:${GID} . .
+COPY . .
 
-RUN npm run build
+# RUN npm run build
+
+RUN chmod +x .nuxt node_modules -f
+RUN chown node:node .nuxt node_modules -f
 
 EXPOSE 3000
 EXPOSE 24678
 
-CMD [ "npm", "run", "dev", "--","--host" ]
 
+CMD [ "npm", "run", "dev", "--","--host" ]
 
 # CMD [ "node", ".output/server/index.mjs" ]
 # FROM nginx:stable-alpine as production-stage
