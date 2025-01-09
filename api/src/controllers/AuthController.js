@@ -41,11 +41,13 @@ export const login = async (req, res) => {
     }
 
     // todo: sign with user id, not email
-    const token = generateToken(user._idid, user.email);
+    const token = generateToken(user._id, user.email);
 
     res.status(200).json({ token, data: await parseUser(user) });
   } catch (error) {
+    console.error(error)
     return res.status(500).json({ error: error.message });
+
   }
 };
 
