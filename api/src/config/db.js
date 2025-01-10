@@ -11,7 +11,7 @@ class DBConnection {
     this.db = null;
     this.config = {
       db_uri: process.env["MONGO_URL"],
-      db_options: {},
+      db_options: { useUnifiedTopology: true },
     };
   }
 

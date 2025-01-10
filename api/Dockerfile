@@ -1,18 +1,13 @@
 # Base Image
 FROM node:18-alpine
 
-ARG UID=1000
-ARG GID=1000
+WORKDIR /app
 
-USER ${UID}:${GID}
-
-WORKDIR /usr/src/app
-
-COPY --chown=${UID}:${GID} package*.json ./
+COPY package*.json ./
 
 RUN npm install
 
-COPY --chown=${UID}:${GID} . .
+COPY . .
 
 EXPOSE 3000
 
