@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome!</title>
+  </head>
+  <body>
+
+    <h1>
+      Hi
+      {{firstName}}
+    </h1>
+
+    <p>
+      Welcome to our SACCO! We’re thrilled to have you join a community built on
+      trust, growth, and financial empowerment. Here, you can save with purpose,
+      access affordable loans, and achieve your financial goals seamlessly.
+    </p>
+
+    {{#if password}}
+      <p>
+        Your password is:
+        <b><code>
+            {{password}}
+          </code></b>
+      </p>
+    {{/if}}
+
+    <p>
+      Let’s grow together!
+    </p>
+
+    <p>
+      Best regards,The Waweru SACCO Team
+    </p>
+
+  </body>
+</html>

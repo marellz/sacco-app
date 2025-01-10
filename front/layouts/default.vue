@@ -7,6 +7,7 @@
             </div>
         </main>
     </div>
+    <ToastWrapper />
 </template>
 <script lang="ts" setup>
 </script>

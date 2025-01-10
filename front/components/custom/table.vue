@@ -25,7 +25,7 @@
 <script lang="ts" setup>
 defineProps<{
     headers:Array<{label: string; key: string;}>,
-    items: Array<Object>
+    items: Array<any>
 }>()
 
 </script>

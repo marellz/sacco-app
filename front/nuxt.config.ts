@@ -9,5 +9,15 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ["@pinia/nuxt"],
+  runtimeConfig: {
+    public: {
+      API_URL: process.env.API_URL ?? `http://localhost:3000`,
+    },
+  },
+  app: {
+    head: {
+      title: "WaweruSacco",
+    },
+  },
+  modules: ["@pinia/nuxt", "pinia-plugin-persistedstate/nuxt"],
 });

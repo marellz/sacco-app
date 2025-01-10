@@ -1,14 +1,21 @@
 <template>
     <li>
-        <nuxt-link :to :class="[linkClass]" class="flex p-3 hover:bg-slate-100 whitespace-nowrap space-x-2 rounded-xl">
-            <slot />
-        </nuxt-link>
+        <slot name="nav-item">
+            <nuxt-link :to class="nav-item" :class="[linkClass]">
+                <slot />
+            </nuxt-link>
+        </slot>
     </li>
 </template>
 <script lang="ts" setup>
-defineProps<{
+withDefaults(defineProps<{
     to: string;
+    tag?: string,
     linkClass?: string;
-}>()
+}>(), {
+    tag: 'nuxt-link'
+})
+
+defineEmits(['click'])
 
 </script>

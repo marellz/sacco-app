@@ -64,4 +64,7 @@
 </template>
 <script lang="ts" setup>
 import { MoveLeft, MoveRight } from 'lucide-vue-next'
+definePageMeta({
+    middleware: ['is-authenticated']
+})
 </script>

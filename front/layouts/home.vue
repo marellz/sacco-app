@@ -1,11 +1,12 @@
 <template>
     <div class="h-screen flex flex-col">
-        <LayoutsHeader />
+        <HomeHeader />
         <main class="flex-auto">
             <slot />
         </main>
-        <LayoutsFooter />
+        <HomeFooter />
     </div>
+    <ToastWrapper />
 </template>
 <script lang="ts" setup>
 </script>
