@@ -10,3 +10,4 @@ export interface User {
 }
 //todo: use constansts
 export type UserRole = "member" | "admin" | "audit";
+export type OtherUser = Omit<User, "id"> & { _id: string };

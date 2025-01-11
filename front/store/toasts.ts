@@ -27,6 +27,18 @@ export const useToastsStore = defineStore(
       toast.timeout_id = timeout;
     };
 
+    const addError = (title: string, description?: string) => {
+      add({ title, description, variant: "error" });
+    }
+
+    const addSuccess = (title: string, description?: string) => {
+      add({ title, description, variant: "success" });
+    }
+
+    const addInfo = (title: string, description?: string) => {
+      add({ title, description, variant: "info" });
+    }
+
     const remove = (id: string) => {
       let index = toasts.value.findIndex((t) => t.id === id);
       let toast = toasts.value[index];
@@ -39,6 +51,9 @@ export const useToastsStore = defineStore(
     return {
       toasts,
       add,
+      addError,
+      addInfo,
+      addSuccess,
       remove,
     };
   },
