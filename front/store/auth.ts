@@ -1,6 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useToastsStore } from "./toasts";
 import type { User, UserRole } from "@/types/user";
+import { useLoansStore } from "./loans";
 
 interface LoginPayload {
   email: string;
@@ -121,6 +122,8 @@ export const useAuthStore = defineStore(
       if (activeRole) {
         user.value = { ...user.value!!, activeRole };
 
+        resetStores()
+
         toasts.add({
           variant: "success",
           title: "Switch to " + activeRole,
@@ -128,6 +131,10 @@ export const useAuthStore = defineStore(
         });
       }
     };
+
+    const resetStores = () => {
+      useLoansStore().resetLoanStore()
+    }
 
     //**GETTERS */
 
@@ -143,6 +150,7 @@ export const useAuthStore = defineStore(
         useRouter().push("/auth/login");
       }
     });
+    
 
     return {
       user,
