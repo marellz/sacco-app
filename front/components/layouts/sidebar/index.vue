@@ -88,7 +88,6 @@ const links: SidebarMenu = {
                 label: "Users",
             },
             {
-                // path: "/dashboard/admin/loans",
                 icon: HandCoins,
                 label: "Loans",
                 children: [
@@ -122,9 +121,13 @@ const links: SidebarMenu = {
                 label: "Savings",
             },
             {
-                path: "/dashboard/member/loans",
+                // path: "/dashboard/member/loans",
                 icon: HandCoins,
                 label: "Loans",
+                children: [
+                    { label: "Active loans", path: "/dashboard/member/loans" },
+                    { label: "Applications", path: "/dashboard/member/loans/applications" },
+                ]
             },
             {
                 path: "/dashboard/member/transactions",
