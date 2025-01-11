@@ -19,7 +19,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-// import { onClickOutside } from "@vueuse/core";
 import { onClickOutside } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
 import { ref, watch } from "vue"
@@ -32,14 +31,14 @@ withDefaults(
     width: "max-w-xl",
   }
 );
+const emit = defineEmits(['close'])
 
 const show = defineModel("show", { default: false });
 const modal = ref();
-
 const close = () => {
   show.value = false;
+  emit("close");
 };
-
 
 onClickOutside(modal, close);
 
