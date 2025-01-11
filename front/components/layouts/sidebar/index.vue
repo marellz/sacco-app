@@ -10,12 +10,10 @@
                         <span>
                             {{ link.label }}
                         </span>
-                        <button type="button"
-                            @click="activeSidebarLinkChildren = activeSidebarLinkChildren === i ? null : i"
-                            class="!ml-auto" :class="{ 'transform rotate-180': activeSidebarLinkChildren === i }">
+                        <span class="!ml-auto">
                             <Minus v-if="activeSidebarLinkChildren === i" />
                             <Plus v-else />
-                        </button>
+                        </span>
                     </button>
                     <ul v-show="activeSidebarLinkChildren === i" class="pl-2 my-2 ml-8">
                         <li>
