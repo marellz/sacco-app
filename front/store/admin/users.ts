@@ -24,12 +24,13 @@ export const useAdminUserStore = defineStore(
     const { $api } = useNuxtApp();
     const users = ref<OtherUser[]>([]);
     const error = ref<any>(null);
-    const loading = ref(false);
+    const loadingUsers = ref(false);
+    const loadingModal = ref(false);
     const queried = ref<string | null>(null);
     const toasts = useToastsStore();
 
     const fetchUsers = async () => {
-      loading.value = true;
+      loadingUsers.value = true;
       queried.value = null;
       try {
         const response = await $api.get("/admin/users");
@@ -37,13 +38,13 @@ export const useAdminUserStore = defineStore(
       } catch (err) {
         error.value = err;
       } finally {
-        loading.value = false;
+        loadingUsers.value = false;
       }
     };
 
     const createUser = async (user: NewUser) => {
       error.value = null;
-      loading.value = true;
+      loadingModal.value = true;
       try {
         const { firstName, otherNames, email, phone, roles } = user;
 
@@ -75,13 +76,13 @@ export const useAdminUserStore = defineStore(
         console.error(err);
         error.value = "Error occurred when creating user\n: " + err;
       } finally {
-        loading.value = false;
+        loadingModal.value = false;
       }
     };
 
     const searchUsers = async (query: string) => {
       error.value = null;
-      loading.value = true;
+      loadingUsers.value = true;
       try {
         const response: SearchResponse = await $api.get("/admin/users", {
           params: {
@@ -103,7 +104,7 @@ export const useAdminUserStore = defineStore(
         console.error(err);
         error.value = err;
       } finally {
-        loading.value = false;
+        loadingUsers.value = false;
       }
     };
 
@@ -112,7 +113,7 @@ export const useAdminUserStore = defineStore(
 
     const updateUserRoles = async (id: string, payload: string[]) => {
       error.value = null;
-      loading.value = true;
+      loadingModal.value = true;
 
       try {
         const { error: err, data: roles }: UpdateUserRoleResponse =
@@ -142,7 +143,7 @@ export const useAdminUserStore = defineStore(
         console.error(err);
         error.value = err;
       } finally {
-        loading.value = false;
+        loadingModal.value = false;
       }
     };
 
@@ -153,7 +154,8 @@ export const useAdminUserStore = defineStore(
     return {
       users,
       error,
-      loading,
+      loadingUsers,
+      loadingModal,
       queried,
       getUser,
       createUser,
