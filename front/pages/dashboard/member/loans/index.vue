@@ -13,9 +13,11 @@
                         <BaseButton v-if="totalAmount > 0">
                             <span>Make payment</span>
                         </BaseButton>
-                        <BaseButton>
-                            <span>Apply for a loan</span>
-                        </BaseButton>
+                        <nuxt-link to="/dashboard/member/loans/applications/new">
+                            <BaseButton>
+                                <span>Apply for a loan</span>
+                            </BaseButton>
+                        </nuxt-link>
                     </div>
                     <!--
                         <div class="mt-5 border-t pt-5">
