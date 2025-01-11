@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-flex space-x-2 py-1 px-3 text-sm rounded-full font-medium leading-normal" :class="themes[color]">
+    <div class="tag" :class="themes[color]">
         <slot />
     </div>
 </template>

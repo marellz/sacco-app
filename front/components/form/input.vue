@@ -17,7 +17,7 @@ import { onMounted, ref } from 'vue';
 withDefaults(defineProps<{
     label?: string | undefined;
     error?: string | undefined;
-    type?: string | undefined;
+    type?: "text" | "number" | "email" | "password" | "tel" | "url" | "search" | "date" | "time" | "datetime-local" | "month" | "week" | "color" | undefined;
     placeholder?: string | undefined;
     disabled?: boolean;
     required?: boolean;

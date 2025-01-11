@@ -5,7 +5,7 @@
             <span v-if="required">&ast;</span>
        </form-label>
        <div>
-           <select v-model="model" :id :disabled :required ref="input">
+           <select class="form-input" v-model="model" :id :disabled :required ref="input">
            <option :value="null" :disabled="required">{{ placeholder }}</option>
            <slot></slot>
         </select>
@@ -29,7 +29,7 @@ withDefaults(defineProps<{
     placeholder: 'Select option',
 })
 
-const id = useCustomId();
+const id = ref();
 
 const model = defineModel<string|null|undefined>({ required: true, default: null });
 
@@ -39,6 +39,8 @@ onMounted(() => {
     if (input.value?.hasAttribute('autofocus')) {
         input.value?.focus();
     }
+
+    id.value = useCustomId()
 });
 
 defineExpose({ focus: () => input.value?.focus() });

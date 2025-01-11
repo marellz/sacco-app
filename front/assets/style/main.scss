@@ -4,14 +4,18 @@
 
 @layer components{
     .form-input {
-        @apply border p-4 text-lg w-full rounded-xl
+        @apply border p-4 text-lg w-full rounded-xl bg-transparent;
     }
 
     .btn {
-        @apply border-2 border-black inline-flex items-center justify-center text-center text-xl uppercase tracking-wider py-4 px-6 transform hover:-translate-y-px transition-all focus:ring focus:ring-offset-2 outline-none rounded-xl font-bold
+        @apply border-2 border-black inline-flex items-center justify-center text-center text-xl uppercase tracking-wider py-4 px-6 transform hover:-translate-y-px transition-all focus:ring focus:ring-offset-2 outline-none rounded-xl font-bold disabled:opacity-35 disabled:transform-none;
     }
 
     .nav-item{
         @apply flex p-3 hover:bg-slate-100 whitespace-nowrap space-x-2 rounded-xl;
+    }
+
+    .tag {
+        @apply inline-flex space-x-2 py-1 px-3 text-sm rounded-full font-medium leading-normal;
     }
 }
