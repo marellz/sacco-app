@@ -2,6 +2,16 @@ import User from "#models/User.js";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 
+export const getUser = async (params) => {
+  try {
+    const user = await User.findById(params);
+    return user;
+  } catch (error) {
+    throw error;
+  } 
+}
+
+
 export const createUser = async ({
   email,
   firstName,
@@ -10,11 +20,10 @@ export const createUser = async ({
   roles,
   phoneNumbers,
 }) => {
-
   const hashedPassword = await bcrypt.hash(password, 10);
   let avatar = faker.image.avatar();
   const activeRole = roles[0];
-  
+
   const user = await User.create({
     firstName,
     otherNames,
@@ -23,21 +32,38 @@ export const createUser = async ({
     avatar,
     roles,
     activeRole,
-    phoneNumbers
+    phoneNumbers,
   });
 
   return parseUser(user);
 };
 
-export const updateUser = async (params, body) => {
-  const { firstName, otherNames, phoneNumbers, avatar } = body;
+export const updateUser = async (id, body) => {
+  try {
+    const user = await User.findById(id);
 
-  await User.findOneAndUpdate(params, {
-    firstName,
-    otherNames,
-    phoneNumbers,
-    avatar,
-  });
+    if (!user) {
+      throw "User not found";
+    }
+
+    const {
+      firstName = user.firstName,
+      otherNames = user.otherNames,
+      phoneNumbers = user.phoneNumbers,
+      avatar = user.avatar,
+      roles = user.roles,
+    } = body;
+
+    await User.findOneAndUpdate(params, {
+      firstName,
+      otherNames,
+      phoneNumbers,
+      avatar,
+      roles
+    });
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const switchUserRole = async (params, body) => {
@@ -50,6 +76,18 @@ export const switchUserRole = async (params, body) => {
     activeRole: role,
   });
 };
+
+export const updateRoles = async (id, roles) => {
+  try {
+    await User.findOneAndUpdate(id, {
+      roles,
+    });
+    
+  } catch (error) {
+    console.error(error)
+    return error.message
+  }
+}
 
 export const parseUser = async (user) => {
   return {
@@ -64,4 +102,13 @@ export const parseUser = async (user) => {
     phoneNumbers: user.phoneNumbers,
     activeRole: user.activeRole,
   };
+};
+
+export default {
+  getUser,
+  createUser,
+  updateUser,
+  updateRoles,
+  switchUserRole,
+  parseUser,
 };

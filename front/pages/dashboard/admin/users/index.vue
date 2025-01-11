@@ -27,9 +27,9 @@
 
                     </div>
 
-                    <div v-if="queried" class="flex space-x-2 items-center">
+                    <div v-if="store.queried" class="flex space-x-2 items-center">
                         <h1 class="text-2xl">
-                            Search results for '{{ queried }}'
+                            Search results for '{{ store.queried }}'
                         </h1>
                         <BaseIconButton @click="clearSearch">
                             <X />
@@ -54,33 +54,12 @@
                                 </div>
                             </template>
                             <template #roles="{ row }">
-                                <form @submit.prevent="updateRoles(row._id, row.roles)">
-                                    <BaseIconButton @click="toggleRoles(row._id)">
-                                        <span>Edit roles</span>
-                                        <ChevronDown class="transform rotate-0"
-                                            :class="{ 'rotate-180': editRolesActive === row._id }" />
-                                    </BaseIconButton>
-                                    <template v-if="editRolesActive === row._id">
-                                        <div class="py-2 px-4">
-                                            <div v-for="role in allRoles" :key="role" class="flex space-x-2">
-                                                <input type="checkbox" v-model="row.roles" :value="role"
-                                                    :name="`roles-${row._id}`" :disabled="(row.roles.length === 1 && row.roles.includes(role)) ||
-                                                        (currentUser.id === row._id && role === ROLE_ADMIN)"
-                                                    :id="`role-${role}`">
-                                                </input>
-                                                <label :for="`role-${role}`">
-                                                    {{ role }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="mt-3">
-                                            <BaseIconButton type="submit" class="bg-color-c">
-                                                <span>Update</span>
-                                                <Save />
-                                            </BaseIconButton>
-                                        </div>
-                                    </template>
-                                </form>
+                                <div class="flex space-x-2 items-center">
+                                    <span v-for="(role, index) in row.roles" :key="index"
+                                        class="bg-slate-100 px-2 py-1 rounded-full">
+                                        {{ role }}
+                                    </span>
+                                </div>
                             </template>
                             <template #phoneNumbers="{ row }">
                                 <div class="flex items-start space-x-3">
@@ -100,14 +79,61 @@
                                     </template>
                                 </div>
                             </template>
+                            <template #actions="{ row }">
+                                <div class="flex space-x-2">
+                                    <BaseIconButton @click="editUserRole(row._id)">
+                                        <SquarePen />
+                                        <span>Edit roles</span>
+                                    </BaseIconButton>
+                                </div>
+                            </template>
                         </CustomTable>
                     </template>
 
                 </div>
             </div>
         </DashContent>
+        <CustomModal v-model:show="showEditRolesModal" title="Edit roles" @close="editableRoleUserId = null">
+            <form v-if="editableRoleUser" @submit.prevent="updateRoles">
+                <LazyCustomLoader v-if="store.loadingModal" />
+                <div v-else-if="error" class="p-4">
+                    <p>{{ error }}</p>
+                </div>
+                <div class="py-2 px-4 space-y-4">
+                    <div v-for="role in allRoles" :key="role" class="flex items-start space-x-2 py-4">
+                        <input type="checkbox" v-model="editableRoles" :value="role"
+                            :name="`roles-${editableRoleUser._id}`" :disabled="(editableRoleUser.roles.length === 1 && editableRoleUser.roles.includes(role)) ||
+                                (currentUser.id === editableRoleUser._id && role === ROLE_ADMIN)" :id="`role-${role}`">
+                        </input>
+                        <label :for="`role-${role}`" class="-mt-2">
+                            <div class="flex space-x-4">
+                                <div class="flex flex-col space-y-2">
+                                    <p class="text-xl font-bold uppercase">
+                                        {{ roleDefinitions[role].name }}
+                                    </p>
+                                    <p class="text-sm text-slate-500">
+                                        {{roleDefinitions[role].description}}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <BaseButton type="submit" class="bg-color-c" :disabled="store.loadingModal">
+                        <span>Update roles</span>
+                    </BaseButton>
+                </div>
+            </form>
+        </CustomModal>
         <CustomModal v-model:show="showCreateUserModal" title="Create user">
             <form @submit.prevent="createUser">
+
+                <LazyCustomLoader v-if="store.loadingModal" />
+
                 <div class="space-y-4">
                     <form-input required label="First name" v-model="newUser.firstName"></form-input>
                     <form-input required label="Other names" v-model="newUser.otherNames"></form-input>
@@ -122,7 +148,7 @@
                         </div>
                     </form-group>
                     <div class="flex justify-end">
-                        <BaseButton>
+                        <BaseButton :disabled="store.loadingModal" type="submit" class="bg-color-c">
                             <span>Save user info</span>
                         </BaseButton>
                     </div>
@@ -132,15 +158,17 @@
     </LayoutsContainer>
 </template>
 <script lang="ts" setup>
-import { useUsers } from '~/composables/admin/useUsers';
-import { ChevronDown, Phone, Plus, Save, Search, X } from 'lucide-vue-next';
+import { Check, Phone, Plus, Save, Search, SquarePen, X } from 'lucide-vue-next';
 import { ROLE_ADMIN, ROLE_AUDIT, ROLE_MEMBER } from '~/constants/user';
-import type { UserRole } from '~/types/user';
 import { useAuthStore } from '~/store/auth';
+import { useAdminUserStore } from '~/store/admin/users';
+import type { UserRole } from '~/types/user';
+
 definePageMeta({
     middleware: 'is-admin'
 })
-const { users, error, loading, queried, fetchUsers: _fetch, searchUsers: _search, createUser: _create } = useUsers();
+
+const store = useAdminUserStore()
 const currentUser = computed(() => useAuthStore().user!!)
 const headers = [
 
@@ -164,26 +192,18 @@ const headers = [
 
 const editRolesActive = ref<null | string>(null)
 
-const toggleRoles = (id: string) => {
-    editRolesActive.value = editRolesActive.value === id ? null : id;
-}
-
-const updateRoles = (id: string, roles: UserRole[]) => {
-    console.log('changed roles', roles)
-}
-
-const allRoles = [ROLE_ADMIN, ROLE_AUDIT, ROLE_MEMBER];
+const allRoles: UserRole[] = [ROLE_ADMIN, ROLE_AUDIT, ROLE_MEMBER];
 
 const query = ref('')
 
 const search = async () => {
-    await _search(query.value)
+    await store.searchUsers(query.value)
 }
 
 const clearSearch = () => {
-    queried.value = null;
+    store.queried = null;
     query.value = '';
-    _fetch()
+    store.fetchUsers()
 }
 
 export interface NewUser {
@@ -205,12 +225,55 @@ const newUser = ref<NewUser>({
 const showCreateUserModal = ref(false)
 
 const createUser = async () => {
-    let created = await _create(newUser.value)
+    let created = await store.createUser(newUser.value)
     if (created) {
         showCreateUserModal.value = false
     }
 }
+
+const users = computed(() => store.users)
+const loading = computed(() => store.loadingUsers)
+const error = computed(() => store.error)
+
+const editableRoles = ref<string[]>([])
+const showEditRolesModal = ref(false)
+const editableRoleUserId = ref<null | string>(null)
+const editableRoleUser = computed(() => users.value.find(user => user._id === editableRoleUserId.value))
+const editUserRole = (id: string) => {
+    showEditRolesModal.value = true
+    editableRoleUserId.value = id
+    editableRoles.value = editableRoleUser.value?.roles || []
+}
+
+const updateRoles = async () => {
+    if (editableRoleUserId.value === null) {
+        return false
+    }
+
+    let updated = await store.updateUserRoles(editableRoleUserId.value, editableRoles.value)
+
+    if (updated) {
+        showEditRolesModal.value = false
+        editableRoleUserId.value = null
+    }
+}
+
+const roleDefinitions = ref({
+    [ROLE_ADMIN]: {
+        name: 'Admin',
+        description: 'The administrator role grants full control over the system, including managing members, contributions, loans, and other key operations.'
+    },
+    [ROLE_AUDIT]: {
+        name: 'Audit',
+        description: 'The audit role provides access to review and monitor financial transactions and reports, ensuring compliance and transparency in the system.'
+    },
+    [ROLE_MEMBER]: {
+        name: 'Member',
+        description: 'The member role allows participation in the SACCO, including saving, borrowing, and engaging in community growth initiatives.'
+    }
+})
+
 onMounted(() => {
-    _fetch();
+    store.fetchUsers();
 });
 </script>
