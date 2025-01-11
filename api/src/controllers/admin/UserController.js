@@ -32,9 +32,28 @@ export const getUsers = async (req, res) => {
     return res.status(500).json({ error });
   }
 };
-export const getUser = async (req, res) => {};
+export const getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export const verifyUser = async (req, res) => {};
+    const user = await UserService.getUserById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.json({
+      data: user,
+    });
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const verifyUser = async (req, res) => {
+  // todo: implement
+};
 
 export const createUser = async (req, res) => {
   try {
@@ -89,10 +108,13 @@ export const updateRoles = async (req, res) => {
       return res.status(500).json({ error: "Invalid request" });
     }
 
-    // todo: current user must have admin role, and must not remove it
+    // current user must have admin role, and must not remove it
+    if(req.user._id === id && !roles.includes("admin")){
+      return res.status(500).json({ error: "You cannot." });
+    }
 
     await UserService.updateRoles({ _id: id }, roles);
-    const user = await UserService.getUser(id);
+    const user = await UserService.getUserById(id);
 
     if(!user){
       return res.status(500).json({ error: "User not found" });

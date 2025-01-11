@@ -2,13 +2,22 @@ import User from "#models/User.js";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 
-export const getUser = async (params) => {
+export const getUserById = async (params) => {
   try {
     const user = await User.findById(params);
     return user;
   } catch (error) {
     throw error;
   } 
+}
+
+export const getUser = async (params) => {
+    try {
+      const user = await User.findOne(params);
+      return user;
+    } catch (error) {
+      throw error;
+    } 
 }
 
 
@@ -106,6 +115,7 @@ export const parseUser = async (user) => {
 
 export default {
   getUser,
+  getUserById,
   createUser,
   updateUser,
   updateRoles,
