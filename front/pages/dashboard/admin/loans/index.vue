@@ -7,6 +7,8 @@
     </LayoutsContainer>
 </template>
 <script lang="ts" setup>
+import { useLoansStore } from '~/store/loans';
 
-const loans = ref([])
+const store = useLoansStore()
+const loans = computed(() => store.applications)
 </script>

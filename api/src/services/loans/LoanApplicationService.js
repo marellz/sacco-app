@@ -4,7 +4,16 @@ const getUserLoanApplications = async (user) => {
   return await LoanApplication.find({ user });
 };
 
-const getPendingLoanApplications = async () => {};
+const getPendingLoanApplications = async () => {
+  // status is either rejected, approved or pending
+  const data = await LoanApplication.find({
+    status: {
+      $in: ["pending", "approved", "rejected"],
+    },
+  }).populate("user");
+
+  return data;
+};
 
 const create = async (params) => {
   const {
@@ -51,6 +60,7 @@ const update = async (id, params) => {
     case "pending":
       action.submittedAt = new Date();
       break;
+
     case "approved":
       action.approvedAt = new Date();
       action.approvedBy = currentUser;
@@ -80,6 +90,7 @@ const update = async (id, params) => {
 
   const payload = {
     status: params.status,
+    ...action
   };
 
   await LoanApplication.findByIdAndUpdate(id, payload);

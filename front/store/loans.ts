@@ -32,7 +32,7 @@ export type LoanApplicationStatus =
   | LoanApplicationStatusEnum.REJECTED
   | LoanApplicationStatusEnum.DISBURSED
   | LoanApplicationStatusEnum.REPAID
-  | LoanApplicationStatusEnum.WITHDRAWN
+  | LoanApplicationStatusEnum.WITHDRAWN;
 
 export interface LoanApplication extends NewLoanApplication {
   _id: string;
@@ -52,6 +52,26 @@ export interface MyLoanApplicationsResponse {
 export interface WithdawLoanApplicationResponse {
   error?: any;
   success: boolean;
+}
+
+export interface LoanApplicationsResponse {
+  error?: any;
+  data?: LoanApplication[];
+}
+
+export interface LoanApplicationApprovalResponse {
+  error?: any;
+  success: boolean;
+}
+
+export interface LoanApplicationRejectResponse {
+  error?: any;
+  success: boolean;
+}
+
+export interface LoanDisburseResponse {
+  success: boolean;
+  error?: any;
 }
 
 export const useLoansStore = defineStore(
@@ -177,6 +197,155 @@ export const useLoansStore = defineStore(
       }
     };
 
+    const getLoanApplications = async () => {
+      error.value = null;
+      loading.value = true;
+      applications.value = []
+      try {
+        const { data, error: err }: LoanApplicationsResponse = await $api.get(
+          "/admin/loan/applications"
+        );
+
+        if (err) {
+          error.value = err;
+          toasts.addError("Getting applications", err);
+        }
+
+        if (data) {
+          applications.value = data;
+        }
+      } catch (error) {
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const approveLoanApplication = async (id: string) => {
+      error.value = null;
+      loading.value =true;
+
+      try {
+        const { error: err, success }: LoanApplicationApprovalResponse =
+          await $api.put(`/admin/loan/applications/${id}/approve`);
+
+        if (err) {
+          toasts.addError("Loan application", err);
+        } 
+
+         if (success) {
+           updateApplicationStatus(id, LoanApplicationStatusEnum.APPROVED);
+         }
+
+      } catch (err) {
+        error.value = err;
+        toasts.addError("Error", err as string);
+      } finally {
+        loading.value = false
+      }
+    };
+
+    const rejectLoanApplication = async (id: string) => {
+      error.value = null
+      loading.value = true
+
+      try {
+        const { error: err, success }: LoanApplicationRejectResponse =
+          await $api.put(`/admin/loan/applications/${id}/reject`);
+
+        if (err) {
+          error.value = err
+          toasts.addError("Error rejecting", err);
+        }
+
+        if (success) {
+          updateApplicationStatus(id, LoanApplicationStatusEnum.REJECTED);
+        }
+        
+      } catch (err) {
+        error.value = err;
+        toasts.addError("Error rejecting", err as string);
+      } finally {
+        loading.value = false
+      }
+    };
+
+    const disburseLoan = async (id: string) => {
+      error.value = null
+      loading.value = true
+      try {
+        const { error: err, success }: LoanDisburseResponse = await $api.put(
+          `/admin/loan/applications/${id}/disburse`
+        );
+
+        if (err) {
+          error.value = err
+          toasts.addError("Loan disbursement error", err as string);
+        }
+
+        if (success) {
+          updateApplicationStatus(id, LoanApplicationStatusEnum.DISBURSED);
+        }
+      } catch (err) {
+        error.value = err;
+        toasts.addError("Loan disbursement error", err as string);
+      } finally {
+        loading.value = false
+      }
+    };
+
+    const updateApplicationStatus = (
+      id: string,
+      status: LoanApplicationStatus
+    ) => {
+      const _i = applications.value.findIndex((a) => a._id === id);
+      if (_i !== -1) {
+        applications.value[_i].status = status;
+
+        // only remove the application if action is disbursement
+        if(status === LoanApplicationStatusEnum.DISBURSED){
+          setTimeout(() => {
+            applications.value.splice(_i, 1)
+          }, 200)
+        }
+        console.log('application id', id)
+      } else {
+        console.log('no application');
+        
+      }
+
+      switch (status) {
+        case LoanApplicationStatusEnum.APPROVED:
+          toasts.addSuccess(
+            "Approved",
+            "Loan application successfully approved"
+          );
+          break;
+        case LoanApplicationStatusEnum.REJECTED:
+          toasts.addInfo(
+            "Rejected",
+            "Loan application successfully rejected"
+          );
+          break;
+        case LoanApplicationStatusEnum.DISBURSED:
+          toasts.addSuccess(
+            "Disbursed",
+            "Loan application successfully disbursed"
+          );
+          break;
+      
+        default:
+          break;
+      }
+
+      
+    };
+
+    const resetLoanStore = () => {
+      applications.value = [];
+      error.value = null;
+      loading.value = false;
+    };
+
     return {
       loading,
       error,
@@ -187,6 +356,15 @@ export const useLoansStore = defineStore(
       submitLoanApplication,
       getMyLoanApplications,
       deleteLoanApplication,
+
+      //admin
+      getLoanApplications,
+      approveLoanApplication,
+      rejectLoanApplication,
+      disburseLoan,
+
+      // use
+      resetLoanStore,
     };
   },
   {
