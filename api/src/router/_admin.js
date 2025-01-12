@@ -25,19 +25,19 @@ router.get("/users/:id", [authenticate, admin], getUser);
 router.put("/users/:id", [authenticate, admin], updateUser);
 router.put("/users/:id/roles", [authenticate, admin], updateRoles);
 
-router.get("/loan/applications", [authenticate, admin], getLoanApplications);
+router.get("/loan-applications", [authenticate, admin], getLoanApplications);
 router.put(
-  "/loan/applications/:id/reject",
+  "/loan-applications/:id/reject",
   [authenticate, admin],
   rejectLoanApplication
 );
 router.put(
-  "/loan/applications/:id/approve",
+  "/loan-applications/:id/approve",
   [authenticate, admin],
   approveLoanApplication
 );
 router.put(
-  "/loan/applications/:id/disburse",
+  "/loan-applications/:id/disburse",
   [authenticate, admin],
   disburseLoanApplication
 );

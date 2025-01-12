@@ -203,7 +203,7 @@ export const useLoansStore = defineStore(
       applications.value = []
       try {
         const { data, error: err }: LoanApplicationsResponse = await $api.get(
-          "/admin/loan/applications"
+          "/admin/loan-applications"
         );
 
         if (err) {
@@ -226,7 +226,7 @@ export const useLoansStore = defineStore(
 
       try {
         const { error: err, success }: LoanApplicationApprovalResponse =
-          await $api.put(`/admin/loan/applications/${id}/approve`);
+          await $api.put(`/admin/loan-applications/${id}/approve`);
 
         if (err) {
           toasts.addError("Loan application", err);
@@ -250,7 +250,7 @@ export const useLoansStore = defineStore(
 
       try {
         const { error: err, success }: LoanApplicationRejectResponse =
-          await $api.put(`/admin/loan/applications/${id}/reject`);
+          await $api.put(`/admin/loan-applications/${id}/reject`);
 
         if (err) {
           error.value = err
@@ -274,7 +274,7 @@ export const useLoansStore = defineStore(
       loading.value = true
       try {
         const { error: err, success }: LoanDisburseResponse = await $api.put(
-          `/admin/loan/applications/${id}/disburse`
+          `/admin/loan-applications/${id}/disburse`
         );
 
         if (err) {
@@ -340,6 +340,10 @@ export const useLoansStore = defineStore(
       
     };
 
+    const getActiveLoans = async () => {
+      const {data: error} = await $api.get('/admin/loans/active')
+    }
+
     const resetLoanStore = () => {
       applications.value = [];
       error.value = null;
@@ -365,6 +369,10 @@ export const useLoansStore = defineStore(
 
       // use
       resetLoanStore,
+
+      /**loans */
+
+
     };
   },
   {
