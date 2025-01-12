@@ -8,7 +8,7 @@
                     <p class="text-red-500">{{ store.error }}</p>
                 </div>
             </template>
-            <DashLoanApplicationsTable :applications>
+            <DashLoanApplicationsTable v-else :applications>
                 <template #actions="{row}">
                     <template v-if="row.status === LoanApplicationStatusEnum.PENDING">
                         <BaseIconButton @click="approve(row._id)" class="hover:!bg-green-100 hover:text-green-500">
@@ -57,7 +57,6 @@ const review = async (id: string) => {
     // todo: open in a modal?
     // await store.reviewLoan(string)
 }
-
 
 onMounted(async () => {
     await store.getLoanApplications()
