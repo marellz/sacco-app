@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema(
   {
+    application: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "LoanApplications",
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -10,28 +14,11 @@ const schema = new mongoose.Schema(
       type: String,
       default: "active", // active, repaid, defaulted
     },
-    duration: {
-      type: Number,
-      required: true,
-    },
-    durationUnit: {
-      type: String, // days, weeks, months, years
-      default: "months",
-      required: true,
-    },
-    interestAmount: {
-      type: Number,
-      required: true,
-    },
-    interestRate: {
-      type: Number,
-      required: true,
-    },
     repaidAmount: {
       type: Number,
       default: 0,
     },
-    currentBalance: {
+    currentBalance: { // disbursed
       type: String,
       default: 0,
     },
@@ -39,19 +26,11 @@ const schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    remainingBalance: {
+    installmentsRemaining: {
       type: Number,
       required: true,
     },
-    application: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "LoanApplications",
-    },
-    repaymentFrequency: {
-      type: Number,
-      required: true,
-    },
-    repaymentAmount: {
+    installmentAmount: {
       type: Number,
       required: true,
     },
