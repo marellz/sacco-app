@@ -138,11 +138,16 @@ const interestAmount = computed(() => {
 
 
 const form = ref(newApplication)
+
+// todo: move this to api
 const calculate = (v: NewLoanApplication = form.value) => {
     if (interestAmount.value) {
         form.value.repayableAmount = Number(form.value.principleAmount!!) + interestAmount.value // todo: + fees
         form.value.interestAmount = interestAmount.value;
-        form.value.installmentAmount = Math.floor(form.value.repayableAmount / Number(form.value.installments))
+
+        // effective installment amount will be +1 because of the decimals
+        // might be corrected on the last "next payment calculation"
+        form.value.installmentAmount = Math.ceil(form.value.repayableAmount / Number(form.value.installments))
     }
 }
 

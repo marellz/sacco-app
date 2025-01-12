@@ -12,6 +12,7 @@ const createAccount = async (applicationId) => {
     disbursedBalance: application.principleAmount, // todo: minus fees?
     installmentsRemaining: application.installments,
     installmentAmount: application.installmentAmount,
+    repaymentBalance: application.repayableAmount,
   });
 };
 
@@ -64,11 +65,13 @@ const processRepayment = async (transactionId, providerCode, status) => {
     let loanParams = {};
 
     // recalculate installments
-    let remainingBalance = loan.repaidAmount - transaction.amount;
+    let remainingBalance = loan.repayableAmount - transaction.amount;
+    let repaidAmount = loan.repaidAmount + transaction.amount;
     let installmentsRemaining = loan.repaidAmount / loan.installmentAmount;
     // note: if installmentsRemaining < 1, update installmentAmount,
     // and remaining installments is 1
-    loanParams.remainingBalance = remainingBalance;
+    loanParams.repaymentBalance = remainingBalance;
+    loanParams.repaidAmount = repaidAmount;
     loanParams.installmentsRemaining = Math.ceil(installmentsRemaining);
 
     if (installmentsRemaining < 1) {
