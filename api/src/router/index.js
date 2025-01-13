@@ -2,6 +2,7 @@ import homeRoutes from "./_home.js";
 import authRoutes from "./_auth.js";
 import userRoutes from "./_user.js";
 import loanRoutes from "./_loans.js";
+import loanApplicationRoutes from "./_loanApplications.js";
 
 import adminLoanApplicationRoutes from "./admin/_loanApplications.js";
 import adminLoanRoutes from "./admin/_loans.js";
@@ -12,6 +13,7 @@ const routes = new Map([
   ["/auth", authRoutes],
   ["/user", userRoutes],
   ["/loans", loanRoutes],
+  ["/loan-applications", loanApplicationRoutes],
   
   // admin
   ["/admin/users", adminUserRoutes],

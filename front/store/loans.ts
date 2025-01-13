@@ -89,7 +89,7 @@ export const useLoansStore = defineStore(
       loading.value = true;
       try {
         const { error, data }: NewLoanApplicationResponse = await $api.post(
-          "/loans/applications",
+          "/loan-applications",
           payload
         );
 
@@ -118,7 +118,7 @@ export const useLoansStore = defineStore(
       loading.value = true;
       try {
         const { error: err, data }: MyLoanApplicationsResponse = await $api.get(
-          "/loans/applications"
+          "/loan-applications"
         );
         if (err) {
           error.value = err;
@@ -138,7 +138,7 @@ export const useLoansStore = defineStore(
       loading.value = true;
       try {
         const { error, success }: WithdawLoanApplicationResponse =
-          await $api.put(`/loans/applications/${id}/withdraw`);
+          await $api.put(`/loan-applications/${id}/withdraw`);
         if (error || !success) {
           toasts.addError("Loan withdrawal", error ?? "Could not complete");
         } else if (success) {
@@ -158,7 +158,7 @@ export const useLoansStore = defineStore(
       loading.value = true;
       try {
         const { error, success }: WithdawLoanApplicationResponse =
-          await $api.delete(`/loans/applications/${id}`);
+          await $api.delete(`/loan-applications/${id}`);
         if (error || !success) {
           toasts.addError("Loan withdrawal", error ?? "Could not complete");
         } else if (success) {
@@ -178,7 +178,7 @@ export const useLoansStore = defineStore(
       loading.value = true;
       try {
         const { error, success }: WithdawLoanApplicationResponse =
-          await $api.put(`/loans/applications/${id}/submit`);
+          await $api.put(`/loan-applications/${id}/submit`);
         if (error || !success) {
           toasts.addError(
             "Loan Application Submission",

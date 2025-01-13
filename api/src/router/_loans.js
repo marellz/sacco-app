@@ -1,20 +1,18 @@
 import express from "express";
+
+import authenticate from "#middleware/authenticate.js";
+import verify from "#middleware/loan/loanAccess.js";
 import {
   get,
-  create,
-  submit,
-  withdraw,
-  destroy,
-} from "#controllers/member/LoanApplicationController.js";
-import authenticate from "#middleware/authenticate.js";
+  getOne,
+} from "#controllers/member/LoanController.js"
 
 const router = express.Router();
 
-// todo: member routes
-router.get("/applications", authenticate, get);
-router.post("/applications", authenticate, create);
-router.delete("/applications/:id", authenticate, destroy);
-router.put("/applications/:id/submit", authenticate, submit);
-router.put("/applications/:id/withdraw", authenticate, withdraw);
+router.use([authenticate])
+
+router.get('/', get)
+router.get('/:id', getOne)
+router.param("id", verify)
 
 export default router;
